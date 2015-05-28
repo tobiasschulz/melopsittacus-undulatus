@@ -60,7 +60,20 @@ namespace MelopsittacusUndulatus
 		protected override void OnResume ()
 		{
 			base.OnResume ();
-			//_locationManager.RequestLocationUpdates (_locationProvider, 0, 0, this);
+
+			Log.LogHandler += updateLog_LogHandler;
+		}
+
+		protected override void OnPause ()
+		{
+			Log.LogHandler -= updateLog_LogHandler;
+
+			base.OnPause ();
+		}
+
+		void updateLog_LogHandler (Log.Type type, IEnumerable<string> messages)
+		{
+			updateLog ();
 		}
 	}
 }

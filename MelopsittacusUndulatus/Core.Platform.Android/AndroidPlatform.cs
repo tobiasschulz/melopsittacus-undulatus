@@ -1,7 +1,9 @@
 ﻿using System;
-using Core.Common;
-using AndroidLog = Android.Util.Log;
 using System.Collections.Generic;
+using Core.Common;
+using Core.Portable;
+using AndroidEnvironment = Android.OS.Environment;
+using AndroidLog = Android.Util.Log;
 
 namespace Core.Platform.Android
 {
@@ -12,12 +14,14 @@ namespace Core.Platform.Android
 
 		internal static bool enabled = false;
 
-		internal static FixedSizedQueue<string> queue = new FixedSizedQueue<string> (100);
+		internal static FixedSizedQueue<string> queue = new FixedSizedQueue<string> (500);
 
 		public static void Start ()
 		{
 			if (!enabled) {
 				enabled = true;
+
+				Assign ();
 
 				Log.LogHandler += (type, messageLines) => {
 					foreach (string _message in messageLines) {
@@ -48,6 +52,89 @@ namespace Core.Platform.Android
 				}
 			}
 		}
+
+		static void Assign ()
+		{
+			PlatformInfo.System = new AndroidInfo ();
+			PlatformInfo.User = new AndroidInfo ();
+		}
+	}
+
+	public sealed class AndroidInfo : ISystemInfo, IUserInfo
+	{
+		#region ISystemInfo implementation
+
+		public ModernOperatingSystem OperatingSystem {
+			get {
+				return ModernOperatingSystem.Android;
+			}
+		}
+
+		public bool IsRunningFromNUnit {
+			get {
+				return false;
+			}
+		}
+
+		public string SDCardDirectory {
+			get {
+				return AndroidEnvironment.ExternalStorageDirectory.AbsolutePath;
+			}
+		}
+
+		public string ApplicationPath {
+			get {
+				return SDCardDirectory;
+			}
+		}
+
+		public string WorkingDirectory {
+			get {
+				return SDCardDirectory;
+			}
+		}
+
+		public bool IsInteractive {
+			get {
+				return false;
+			}
+		}
+
+		#endregion
+
+		#region IUserInfo implementation
+
+		public string UserFullName {
+			get {
+				return "User";
+			}
+		}
+
+		public string UserShortName {
+			get {
+				return "android-user";
+			}
+		}
+
+		public string HostName {
+			get {
+				return "android-host";
+			}
+		}
+
+		public string UserMail {
+			get {
+				return null;
+			}
+		}
+
+		public string HomeDirectory {
+			get {
+				return SDCardDirectory;
+			}
+		}
+
+		#endregion
 	}
 }
 

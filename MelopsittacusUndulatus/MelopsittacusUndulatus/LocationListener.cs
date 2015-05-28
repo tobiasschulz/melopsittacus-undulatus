@@ -13,7 +13,7 @@ namespace MelopsittacusUndulatus
 		LocationManager _locationManager;
 		String _locationProvider;
 
-		public Action<Location> LocationChanged = loc => Log.Info ("location: ", loc);
+		public Action<Location> LocationChanged = loc => Log.Info ("location: ", loc.Latitude, ",", loc.Longitude);
 
 		public LocationListener (Context context)
 		{
@@ -35,7 +35,10 @@ namespace MelopsittacusUndulatus
 					_locationProvider = String.Empty;
 				}
 
-				_locationManager.RequestLocationUpdates (_locationProvider, 0, 0, this);
+				long minTime = 10 * 60 * 1000;
+				float minDistance = 0;
+
+				_locationManager.RequestLocationUpdates (provider: _locationProvider, minTime: minTime, minDistance: minDistance, listener: this);
 			} catch (Exception ex) {
 				Log.Error (ex);
 			}
