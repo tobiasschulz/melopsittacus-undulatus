@@ -26,6 +26,7 @@ namespace MelopsittacusUndulatus
 		
 		public static void UpdateIdValues()
 		{
+			global::Core.Platform.Android.Resource.String.library_name = global::MelopsittacusUndulatus.Resource.String.library_name;
 		}
 		
 		public partial class Attribute
@@ -59,6 +60,12 @@ namespace MelopsittacusUndulatus
 		
 		public partial class Id
 		{
+			
+			// aapt resource value: 0x7f050001
+			public const int location_text = 2131034113;
+			
+			// aapt resource value: 0x7f050002
+			public const int log = 2131034114;
 			
 			// aapt resource value: 0x7f050000
 			public const int myButton = 2131034112;
@@ -95,8 +102,11 @@ namespace MelopsittacusUndulatus
 			// aapt resource value: 0x7f040001
 			public const int app_name = 2130968577;
 			
+			// aapt resource value: 0x7f040002
+			public const int button_update = 2130968578;
+			
 			// aapt resource value: 0x7f040000
-			public const int hello = 2130968576;
+			public const int library_name = 2130968576;
 			
 			static String()
 			{

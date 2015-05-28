@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="hello">Hello World, Click Me!</string>
-	<string name="app_name">MelopsittacusUndulatus</string>
+	<string name="app_name">Melopsittacus Undulatus</string>
+	<string name="button_update">Update</string>
 </resources>
