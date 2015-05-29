@@ -12,11 +12,16 @@ namespace MelopsittacusUndulatus
 		Location _currentLocation;
 		LocationManager _locationManager;
 		String _locationProvider;
+		int countLocations = 0;
+		int countErrors = 0;
 
 		public Action<Location> LocationChanged = loc => Log.Info ("location: ", loc.Latitude, ",", loc.Longitude);
 
-		public LocationListener (Context context)
+		public LocationListenerMode Mode { get; set; }
+
+		public LocationListener (Context context, LocationListenerMode mode)
 		{
+			Mode = mode;
 			InitializeLocationManager (context);
 		}
 
@@ -34,9 +39,10 @@ namespace MelopsittacusUndulatus
 				} else {
 					_locationProvider = String.Empty;
 				}
+				Log.Debug (GetType ().Name, ": providers: ", acceptableLocationProviders.Join (", "));
 
-				long minTime = 10 * 60 * 1000;
-				float minDistance = 0;
+				long minTime = Mode == LocationListenerMode.OneLocation ? 0 : (10 * 60 * 1000);
+				const float minDistance = 0;
 
 				_locationManager.RequestLocationUpdates (provider: _locationProvider, minTime: minTime, minDistance: minDistance, listener: this);
 			} catch (Exception ex) {
@@ -46,7 +52,12 @@ namespace MelopsittacusUndulatus
 
 		public void Destroy ()
 		{
+			Log.Debug (GetType ().Name, ": Destroy!");
 			_locationManager.RemoveUpdates (this);
+			_locationManager = null;
+			countLocations = 0;
+			countErrors = 0;
+			LocationChanged = loc => Log.Error (GetType ().Name, ": LocationChanged handler: has been destroyed");
 		}
 
 		#region ILocationListener implementation
@@ -54,10 +65,27 @@ namespace MelopsittacusUndulatus
 		public void OnLocationChanged (Location location)
 		{
 			_currentLocation = location;
-			if (_currentLocation == null) {
-				Log.Error ("Unable to determine your location.");
-			} else {
-				LocationChanged (location);
+
+			// the caller only wants one location
+			if (Mode == LocationListenerMode.OneLocation) {
+				if (_currentLocation == null) {
+					countErrors++;
+					// print error
+					Log.Error (GetType ().Name, ": Unable to determine your location.");
+					if (countErrors >= 3) {
+						// destroy
+						Destroy ();
+					}
+				} else {
+					countLocations++;
+					Log.Debug (GetType ().Name, ": countLocations: ", countLocations);
+					if (countLocations >= 3) {
+						// send location to caller
+						LocationChanged (location);
+						// destroy
+						Destroy ();
+					}
+				}
 			}
 		}
 
@@ -77,6 +105,12 @@ namespace MelopsittacusUndulatus
 		}
 
 		#endregion
+
+		public enum LocationListenerMode
+		{
+			OneLocation,
+			MultipleLocations
+		}
 	}
 }
 
