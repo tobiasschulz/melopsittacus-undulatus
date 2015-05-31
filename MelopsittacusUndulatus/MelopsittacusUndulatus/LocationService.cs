@@ -37,7 +37,7 @@ namespace MelopsittacusUndulatus
 			lock (lockListeningForLocations) {
 				if (listeningForLocations == false) {
 					listeningForLocations = true;
-					LocationListener locationListener = new LocationListener (context: this, mode: LocationListener.LocationListenerMode.OneLocation);
+					LocationListener locationListener = new LocationListener (context: this);
 					locationListener.LocationChanged += OnLocationChanged;
 				}
 			}
@@ -49,6 +49,7 @@ namespace MelopsittacusUndulatus
 			PortableLocation location = new PortableLocation {
 				Latitude = androidLocation.Latitude,
 				Longitude = androidLocation.Longitude,
+				Altitude = androidLocation.Altitude,
 				DateTime = DateTimeExtensions.MillisToDateTimeOffset (milliSecondsSinceEpoch: androidLocation.Time, offsetMinutes: 0).UtcDateTime,
 				Provider = androidLocation.Provider,
 			};
