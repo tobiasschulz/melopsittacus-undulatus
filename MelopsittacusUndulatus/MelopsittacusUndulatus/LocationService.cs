@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Linq;
 using Android.App;
 using Android.Content;
+using Android.Runtime;
 using Core.Common;
 using Core.IO;
-using Core.Portable;
 using Core.Math;
-using System.Linq;
+using Core.Platform.Android;
+using Core.Portable;
 
 namespace MelopsittacusUndulatus
 {
@@ -71,13 +73,13 @@ namespace MelopsittacusUndulatus
 
 			// Create a PendingIntent; we're only using one PendingIntent (ID = 0):
 			PendingIntent pendingIntent = PendingIntent.GetActivity (this, pendingIntentId, intent, PendingIntentFlags.OneShot);
-			
+
 			string text = location.Latitude + " / " + location.Longitude;
 			// Instantiate the builder and set notification elements
 			Notification.Builder builder = new Notification.Builder (this)
 				.SetContentIntent (pendingIntent)
-				.SetContentTitle ("Location")
-				.SetContentText (text)
+				.SetContentTitle ("Location".ToAndroidString ())//"Location")
+				.SetContentText (text.ToAndroidString ())
 			                               //.SetDefaults (NotificationDefaults.Vibrate)
 				.SetSmallIcon (Resource.Drawable.Icon);
 
@@ -90,6 +92,7 @@ namespace MelopsittacusUndulatus
 			// Publish the notification
 			notificationManager.Notify (notificationId, notification);
 		}
+
 
 		public override void OnDestroy ()
 		{

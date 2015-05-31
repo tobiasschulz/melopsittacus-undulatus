@@ -27,7 +27,7 @@ namespace MelopsittacusUndulatus
 			try {
 				_locationManager = (LocationManager)context.GetSystemService (Context.LocationService);
 				Criteria criteriaForLocationService = new Criteria {
-					Accuracy = Accuracy.Fine,
+					Accuracy = Accuracy.Medium,
 					PowerRequirement = Power.Low,
 				};
 				IList<string> acceptableLocationProviders = _locationManager.GetProviders (criteriaForLocationService, true);
@@ -79,7 +79,7 @@ namespace MelopsittacusUndulatus
 			} else {
 				countLocations++;
 				Log.Debug (GetType ().Name, ": countLocations: ", countLocations);
-				if (countLocations >= 3) {
+				if (countLocations >= 1) {
 					// send location to caller
 					LocationChanged (location);
 					// destroy

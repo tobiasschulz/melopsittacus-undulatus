@@ -52,10 +52,9 @@ namespace MelopsittacusUndulatus
 
 		void updateLog ()
 		{
-			string text = string.Format ("{0} clicks!", count++)
-			              + "\n"
-			              + string.Join ("\n", AndroidPlatform.CapturedLogMessages.Reverse ());
-			_logText.SetText (text.ToCharArray (), 0, text.Length);
+			_logText.SetText ((string.Format ("{0} clicks!", count++)
+			+ "\n"
+			+ string.Join ("\n", AndroidPlatform.CapturedLogMessages.Reverse ())).ToAndroidString (), TextView.BufferType.Normal);
 		}
 
 		protected override void OnResume ()
