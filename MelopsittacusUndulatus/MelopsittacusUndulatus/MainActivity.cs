@@ -46,6 +46,7 @@ namespace MelopsittacusUndulatus
 			Button button = FindViewById<Button> (Resource.Id.myButton);
 
 			updateLog ();
+
 			
 			button.Click += (sender, e) => updateLog ();
 		}
